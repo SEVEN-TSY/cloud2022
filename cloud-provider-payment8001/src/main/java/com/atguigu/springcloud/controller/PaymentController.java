@@ -1,7 +1,11 @@
 package com.atguigu.springcloud.controller;
 
+import com.atguigu.springcloud.annotation.NoControllerResponseAdvice;
+import com.atguigu.springcloud.code.AppCode;
+import com.atguigu.springcloud.code.ResultCode;
 import com.atguigu.springcloud.entities.CommonResult;
 import com.atguigu.springcloud.entities.Payment;
+import com.atguigu.springcloud.exception.APIException;
 import com.atguigu.springcloud.service.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,26 +35,32 @@ public class PaymentController {
     @PostMapping("/payment/create")
     public CommonResult create(@RequestBody Payment payment){
         int result = paymentService.create(payment);
-        log.info("插入结果，主键ID："+payment.getId());
+        log.info("serverPort:"+serverPort+"；插入结果，主键ID："+payment.getId());
         if(result>0){
             return new CommonResult(200,"插入数据库成功!serverPort：" +serverPort,payment.getId());
         }else {
-            return new CommonResult(444,"插入数据库失败",null);
+            //return new CommonResult(444,"插入数据库失败",null);
+            throw new APIException(AppCode.CURD_ERROR,payment.toString()+"写入异常");
         }
     }
 
     @GetMapping("/payment/get/{id}")
     public CommonResult getPaymentById(@PathVariable("id") Long id){
         Payment payment = paymentService.getPaymentById(id);
-        log.info("查询结果："+payment);
+        log.info("serverPort:"+serverPort+"；查询结果："+payment);
         if (payment!=null){
-            return new CommonResult(200,"查询成功!serverPort：" +serverPort,payment);
+            //return new CommonResult(payment);
+            //int i= (int) (payment.getId()/0);
+            return new CommonResult(200,"查询成功!serverPort：" +serverPort,payment.getId());
         }else {
-            return new CommonResult(444,"无查询记录，查询ID："+id,null);
+            //return new CommonResult(ResultCode.FAILED);
+
+            throw new APIException(AppCode.APP_ERROR,id+"订单号不存在");
         }
 
     }
     @GetMapping("/payment/discovery")
+    @NoControllerResponseAdvice
     public Object discovery(){
         List<String> services = discoveryClient.getServices();
         for (String service : services) {
