@@ -70,6 +70,7 @@ public class PaymentController {
 
     @GetMapping("/payment/time")
     public String getTime(){
+        System.out.println("hello world github lxeey");
         return String.valueOf(System.currentTimeMillis());
     }
 
