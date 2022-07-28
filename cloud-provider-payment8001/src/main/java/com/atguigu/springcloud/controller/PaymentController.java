@@ -67,4 +67,10 @@ public class PaymentController {
         }
         return this.discoveryClient;
     }
+
+    @GetMapping("/payment/time")
+    public String getTime(){
+        return String.valueOf(System.currentTimeMillis());
+    }
+
 }
