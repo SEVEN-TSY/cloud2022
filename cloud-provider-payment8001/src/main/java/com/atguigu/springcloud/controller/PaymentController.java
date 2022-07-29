@@ -67,4 +67,12 @@ public class PaymentController {
         }
         return this.discoveryClient;
     }
+
+    @GetMapping("/payment/time")
+    public String getTime(){
+        System.out.println("hello world github lxeey");
+        System.out.println("hello world github lxeey");
+        return String.valueOf(System.currentTimeMillis());
+    }
+
 }
