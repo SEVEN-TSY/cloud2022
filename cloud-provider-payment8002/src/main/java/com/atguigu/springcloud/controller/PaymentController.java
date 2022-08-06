@@ -1,7 +1,10 @@
 package com.atguigu.springcloud.controller;
 
+import com.atguigu.springcloud.annotation.NoControllerResponseAdvice;
+import com.atguigu.springcloud.code.AppCode;
 import com.atguigu.springcloud.entities.CommonResult;
 import com.atguigu.springcloud.entities.Payment;
+import com.atguigu.springcloud.exception.APIException;
 import com.atguigu.springcloud.service.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Description 订单微服务提供者
@@ -51,7 +55,23 @@ public class PaymentController {
             return new CommonResult(444,"无查询记录，查询ID："+id,null);
         }
     }
+    @GetMapping("/payment/autopack/get/{id}")
+    public Payment getPaymentByIdAutoPack(@PathVariable("id") Long id){
+        Payment payment = paymentService.getPaymentById(id);
+        log.info("serverPort:"+serverPort+"；查询结果："+payment);
+        if (payment!=null){
+            //return new CommonResult(payment);
+            //int i= (int) (payment.getId()/0);
+            return payment;
+        }else {
+            //return new CommonResult(ResultCode.FAILED);
+
+            throw new APIException(AppCode.APP_ERROR,id+"订单号不存在");
+        }
+
+    }
     @GetMapping("/payment/discovery")
+    @NoControllerResponseAdvice
     public Object discovery(){
         List<String> services = discoveryClient.getServices();
         for (String service : services) {

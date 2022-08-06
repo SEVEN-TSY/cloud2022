@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Description 订单微服务提供者
@@ -59,6 +60,24 @@ public class PaymentController {
         }
 
     }
+
+    @GetMapping("/payment/autopack/get/{id}")
+    public Payment getPaymentByIdAutoPack(@PathVariable("id") Long id){
+        Payment payment = paymentService.getPaymentById(id);
+        log.info("serverPort:"+serverPort+"；查询结果："+payment);
+        if (payment!=null){
+            //return new CommonResult(payment);
+            //int i= (int) (payment.getId()/0);
+            //暂停几秒钟线程
+            return payment;
+        }else {
+            //return new CommonResult(ResultCode.FAILED);
+
+            throw new APIException(AppCode.APP_ERROR,id+"订单号不存在");
+        }
+
+    }
+
     @GetMapping("/payment/discovery")
     @NoControllerResponseAdvice
     public Object discovery(){

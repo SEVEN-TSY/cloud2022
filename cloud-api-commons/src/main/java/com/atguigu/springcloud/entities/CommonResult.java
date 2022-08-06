@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class CommonResult<T> {
     private Integer code;
     private String message;
-    private T data;
+    private Object data;
 
     //手动设置返回的状态码和信息
     //AllArgsConstructor
@@ -35,14 +35,14 @@ public class CommonResult<T> {
     }
 
     //默认设置返回成功的状态码对象
-    public CommonResult(T data){
+    public CommonResult(Object data){
         this.code= ResultCode.SUCCESS.getCode();
         this.message=ResultCode.SUCCESS.getMsg();
         this.data=data;
     }
 
     //非空对象自主选择返回的状态码对象
-    public CommonResult(StatusCode statusCode,T data){
+    public CommonResult(StatusCode statusCode,Object data){
         this.code=statusCode.getCode();
         this.message=statusCode.getMsg();
         this.data=data;
