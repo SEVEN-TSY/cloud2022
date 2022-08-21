@@ -55,6 +55,11 @@ public class PaymentController {
             return new CommonResult(444,"无查询记录，查询ID："+id,null);
         }
     }
+    @GetMapping("/payment/lb")
+    public CommonResult lb(){
+        return new CommonResult(serverPort);
+    }
+
     @GetMapping("/payment/autopack/get/{id}")
     public Payment getPaymentByIdAutoPack(@PathVariable("id") Long id){
         Payment payment = paymentService.getPaymentById(id);

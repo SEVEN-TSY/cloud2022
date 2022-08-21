@@ -61,6 +61,11 @@ public class PaymentController {
 
     }
 
+    @GetMapping("/payment/lb")
+    public CommonResult lb(){
+        return new CommonResult(serverPort);
+    }
+
     @GetMapping("/payment/autopack/get/{id}")
     public Payment getPaymentByIdAutoPack(@PathVariable("id") Long id){
         Payment payment = paymentService.getPaymentById(id);
