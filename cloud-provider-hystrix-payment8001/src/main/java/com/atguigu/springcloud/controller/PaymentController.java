@@ -8,6 +8,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @Slf4j
 @DefaultProperties(defaultFallback = "paymentInfo_GlobalHandler")
+@RefreshScope
 public class PaymentController {
 
     @Resource
@@ -30,6 +32,9 @@ public class PaymentController {
 
     @Value("${server.port}")
     private String serverPort;
+
+    @Value("${config.info}")
+    private String configInfo;
 
     @GetMapping("/payment/hystrix/ok/get/{id}")
     @HystrixCommand
@@ -78,6 +83,11 @@ public class PaymentController {
         return "id 不能负数，请稍后再试，/(ㄒoㄒ)/~~   id: " +id;
     }
 
+    @GetMapping("/payment/config")
+    public String getConfig(){
+        System.out.println(configInfo);
+        return "config client: "+configInfo;
+    }
 
 
 }
